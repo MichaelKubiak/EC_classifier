@@ -8,4 +8,15 @@ It will be fresh start on the project previously stored in the Annotation reposi
 
 The data parsing section will also be rewritten in order for the data to be directly useful in Keras NNs rather than the previous version, which was produced for use in Scikit-learn models.
 
+---
+
+## Scripts
+
+### annotate
+
+The script that will run the project when complete, currently serving as a guideline for the direction of development
+
+### get_data
+
+This script downloads the required files from ebi, expasy and uniprot respectively.
 
