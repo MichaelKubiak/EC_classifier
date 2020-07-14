@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+
+path=$(pwd)/Data
+while getopts hP: option
+do
+case "${option}"
+in
+h) #help
+echo -P defines the directory into which the files should be downloaded, the default is ./Data/
+exit
+;;
+P) #set data path
+path = $OPTARG
+;;
+esac
+done
+
+mkdir -p $path
+
+cd $path
+
+wget -N ftp://ftp.ebi.ac.uk/pub/databases/Pfam/current_release/Pfam-A.hmm.gz
+gzip -fd Pfam-A.hmm.gz
+
+wget -N ftp://ftp.expasy.org/databases/enzyme/enzyme.dat
+
+wget -N ftp://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/complete/uniprot_sprot.fasta.gz
+gzip -fd uniprot_sprot.fasta.gz
