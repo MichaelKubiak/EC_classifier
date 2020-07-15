@@ -4,20 +4,32 @@
 # ------------------------------------------------------------------------------------------------------
 # imports
 
+from paths import path_arg
 from tensorflow import sparse
 import re
-import paths
 try:
     import cPickle as pickle
 except:
     import pickle
+
+
+# ------------------------------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------------------------------
+# get the accession numbers from a set of lines
+
+def getaccessions(file, start, expression, position):
+    accessions = []
+    for line in file:
+        if line.startswith(start):
+            accessions.append(re.split(expression, line)[position])
+    return accessions
 
 # ------------------------------------------------------------------------------------------------------
 # ------------------------------------------------------------------------------------------------------
 
 def main():
 
-    DATA = paths.path_arg("A script to parse the result of a searchhmm to a sparse tensor for use in the neural network",
+    DATA = path_arg("A script to parse the result of a searchhmm to a sparse tensor for use in the neural network",
                     "Path to the folder to be used for i/o").path
 
     # ------------------------------------------------------------------------------------------------------
@@ -36,16 +48,10 @@ def main():
     # Prepare empty sparse tensor
 
     # Make a list of all Pfam accessions from the HMM file
-    pfam_Accessions=[]
-    for line in pfam:
-        if line.startswith("ACC"):
-            pfam_Accessions.append(re.split(r"\s",line)[3])
+    pfam_Accessions = getaccessions(pfam, "ACC", r"\s", 3)
 
     # Make a list of all protein accessions in swissprot from the fasta file
-    protein_Accessions=[]
-    for line in fasta:
-        if line.startswith(">"):
-            protein_Accessions.append(line.split("|")[1])
+    protein_Accessions = getaccessions(fasta, ">", "|", 1)
 
     # Create an empty, sparse tensor with the proportions of the lists that were made
     hmmtensor = sparse.SparseTensor(
