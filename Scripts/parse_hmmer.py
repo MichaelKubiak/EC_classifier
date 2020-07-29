@@ -7,10 +7,7 @@
 from paths import path_arg
 from tensorflow import sparse
 import re
-try:
-    import cPickle as pickle
-except:
-    import pickle
+import pickle
 
 
 # ------------------------------------------------------------------------------------------------------
