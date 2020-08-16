@@ -25,7 +25,20 @@ def get_ECs(enzyme):
                     ECs[protein.group().split(",")[0]].append(current)
                 else:
                     ECs[protein.group().split(",")[0]] = [current]
+
     return ECs
+
+
+# ---------------------------------------------------------------------------------------------
+# function to get a list of target EC numbers in the correct order
+def get_targets(ECs, proteins):
+    targets = []
+    for protein in proteins:
+        try:
+            targets.append(ECs[protein])
+        except KeyError:
+            targets.append(["None"])
+    return targets
 
 
 # ------------------------------------------------------------------------------------------------------
@@ -33,19 +46,23 @@ def get_ECs(enzyme):
 
 def main():
 
-    DATA = path_arg("A script to relate Swissprot entries to their EC numbers").path
+    DATA = path_arg("A script to relate Swissprot entries to their EC numbers", "Path to data").path
 
     # ------------------------------------------------------------------------------------------------------
     # read files
 
-    with open(DATA + "proteins(r)", "r") as protein_file, open (DATA + "enzyme.dat", "r") as enzyme_file:
+    with open(DATA + "proteins(r)", "r") as protein_file, open(DATA + "enzyme.dat", "r") as enzyme_file:
         proteins = protein_file.readlines()
         enzymes = enzyme_file.readlines()
 
     ECs = get_ECs(enzymes)
 
-    with open(DATA + "EC_dict", "w") as out:
+    with open(DATA + "EC_dict", "wb") as out:
         pickle.dump(ECs, out)
+
+    targets = get_targets(ECs, proteins)
+    with open(DATA + "targets", "wb") as targetfile:
+        pickle.dump(targets, targetfile)
 
 # ------------------------------------------------------------------------------------------------------
 # ------------------------------------------------------------------------------------------------------

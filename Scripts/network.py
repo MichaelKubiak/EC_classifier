@@ -4,6 +4,7 @@
 # Imports
 
 import tensorflow as tf
+import organiser
 
 
 # ------------------------------------------------------------------------------------------------------
@@ -34,9 +35,9 @@ def build(inputs, outputs, hidden, activations, nodes, optimiser, loss, metrics)
 
 
 # ------------------------------------------------------------------------------------------------------
-# Function to build a neural network
+# Function to train a neural network
 
-def train(nn, data, targets, epochs, batch_size):
+def train(nn, data, targets, active, batch_size, epochs):
 
-    nn.fit_generator()
+    nn.fit(organiser.gen_batch(data, targets, active, batch_size, epochs), epochs=epochs, verbose=1)
 

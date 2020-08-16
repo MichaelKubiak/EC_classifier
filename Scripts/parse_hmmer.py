@@ -21,6 +21,7 @@ def getaccessions(file, start, expression, position):
             accessions.append(re.split(expression, line)[position])
     return accessions
 
+
 # ------------------------------------------------------------------------------------------------------
 # ------------------------------------------------------------------------------------------------------
 
@@ -48,13 +49,13 @@ def main():
     pfam_Accessions = getaccessions(pfam, "ACC", r"\s", 3)
 
     # Make a list of all protein accessions in swissprot from the fasta file
-    protein_Accessions = getaccessions(fasta, ">", "|", 1)
+    protein_Accessions = getaccessions(fasta, ">", "\|", 1)
 
     # Create an empty, sparse tensor with the proportions of the lists that were made
     hmmtensor = sparse.SparseTensor(
         indices=[[0, 0]],
-        values=[0],
-        dense_shape=[len(pfam_Accessions), len(protein_Accessions)])
+        values=[float(0)],
+        dense_shape=[len(protein_Accessions), len(pfam_Accessions)])
 
     # ------------------------------------------------------------------------------------------------------
     # Add scores to rows and columns denoted by protein and family respectively
@@ -62,13 +63,13 @@ def main():
     for line in result:
         if not line.startswith("#"):
             # parse line for score
-            splitline = re.split(r"\s", line)
+            splitline = [col for col in re.split(r"\s", line) if col != ""]
             protein_index = protein_Accessions.index(splitline[0].split("|")[1])
             pfam_index = pfam_Accessions.index(splitline[3])
             hmmtensor = sparse.add(hmmtensor, sparse.SparseTensor(
                 indices=[[protein_index, pfam_index]],
-                values=[splitline[5]],
-                dense_shape=[len(pfam_Accessions), len(protein_Accessions)]))
+                values=[float(splitline[5])],
+                dense_shape=[len(protein_Accessions), len(pfam_Accessions)]))
 
     # ------------------------------------------------------------------------------------------------------
     # Write lists and sparse tensor to files
