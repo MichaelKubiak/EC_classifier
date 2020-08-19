@@ -18,4 +18,4 @@ DATA = HOME + "/EC_classification/Data/"
 def path_arg(description, help_arg):
     parser = argparse.ArgumentParser(description=description)
     parser.add_argument("-p", "--path", default=DATA, help=help_arg)
-    return parser.parse_args()
+    return parser

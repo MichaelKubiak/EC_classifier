@@ -31,14 +31,16 @@ def get_ECs(enzyme):
 
 # ---------------------------------------------------------------------------------------------
 # function to get a list of target EC numbers in the correct order
-def get_targets(ECs, proteins):
-    targets = []
-    for protein in proteins:
+
+def get_targetlist(ECs, order):
+    targetlist = []
+    for accession in order:
+        accession = accession.strip("\n")
         try:
-            targets.append(ECs[protein])
+            targetlist.append(ECs[accession])
         except KeyError:
-            targets.append(["None"])
-    return targets
+            targetlist.append(["None"])
+    return targetlist
 
 
 # ------------------------------------------------------------------------------------------------------
@@ -46,7 +48,7 @@ def get_targets(ECs, proteins):
 
 def main():
 
-    DATA = path_arg("A script to relate Swissprot entries to their EC numbers", "Path to data").path
+    DATA = path_arg("A script to relate Swissprot entries to their EC numbers", "Path to data").parse_args().path
 
     # ------------------------------------------------------------------------------------------------------
     # read files
@@ -60,7 +62,8 @@ def main():
     with open(DATA + "EC_dict", "wb") as out:
         pickle.dump(ECs, out)
 
-    targets = get_targets(ECs, proteins)
+    targets = get_targetlist(ECs, proteins)
+
     with open(DATA + "targets", "wb") as targetfile:
         pickle.dump(targets, targetfile)
 

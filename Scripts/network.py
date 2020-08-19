@@ -16,7 +16,7 @@ def build(inputs, outputs, hidden, activations, nodes, optimiser, loss, metrics)
     # if only one number of nodes or activation function is given, multiply it by the number of hidden layers so that all hidden layers have those values
     if hidden != 1:
         if type(nodes) is int:
-            n_nodes = [nodes] * hidden
+            nodes = [nodes] * hidden
         if type(activations) is str:
             activations = [activations] * hidden
 
@@ -37,7 +37,20 @@ def build(inputs, outputs, hidden, activations, nodes, optimiser, loss, metrics)
 # ------------------------------------------------------------------------------------------------------
 # Function to train a neural network
 
-def train(nn, data, targets, active, batch_size, epochs):
+def train(nn, data, targets, active, batch_size, epochs, rand_seed):
 
-    nn.fit(organiser.gen_batch(data, targets, active, batch_size, epochs), epochs=epochs, verbose=1)
+    nn.fit(organiser.gen_batch(data, targets, active, batch_size, epochs, rand_seed), epochs=epochs, verbose=1)
 
+
+# ------------------------------------------------------------------------------------------------------
+# Function to determine the number of distinct outputs
+
+def get_outputs(targets, active, prev):
+    unique = set()
+    for target in [targets[i] for i in active]:
+        try:
+            unique = unique | set(organiser.extract(target, len(prev.split(".")), prev))
+        except AttributeError:
+            unique = unique | set(organiser.extract(targets, 0))
+    outputs = len(unique)
+    return outputs

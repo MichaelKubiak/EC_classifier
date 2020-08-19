@@ -28,7 +28,7 @@ def getaccessions(file, start, expression, position):
 def main():
 
     DATA = path_arg("A script to parse the result of a searchhmm to a sparse tensor for use in the neural network",
-                    "Path to the folder to be used for i/o").path
+                    "Path to the folder to be used for i/o").parse_args().path
 
     # ------------------------------------------------------------------------------------------------------
     # Read files
