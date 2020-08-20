@@ -20,9 +20,7 @@ def extract(targets, n, prev=None):
     out = []
     if targets != "None":
         for EC in targets:
-            if n != 0 and EC.startswith(prev):
-                out.append(EC.split(".")[n])
-            elif n == 0:
+            if (n != 0 and EC.startswith(prev)) or n == 0:
                 out.append(EC.split(".")[n])
 
     if not out:
@@ -78,10 +76,7 @@ def get_current(targets, active, pattern):
 
 def gen_batch(data, targets, active, batch_size, epochs, target_pattern=None, rand_seed=0):
     seed(rand_seed)
-    try:
-        position = len(target_pattern.split("."))
-    except AttributeError:
-        position = 0
+    position = get_position(target_pattern)
     for e in range(epochs):
         shuffle(list(active))
         for batch in list(range(floor(len(active)/batch_size))):
@@ -92,3 +87,13 @@ def gen_batch(data, targets, active, batch_size, epochs, target_pattern=None, ra
                 data_batch = tf.concat([data_batch, tf.sparse.to_dense(tf.sparse.slice(data, [member, 0], [1, data.dense_shape[1]]))], axis=0)
             yield data_batch, target_batch
 
+
+# ------------------------------------------------------------------------------------------------------
+# get the position of the next value
+
+def get_position(pattern):
+    try:
+        position = len(target_pattern.split("."))
+    except AttributeError:
+        position = 0
+    return position

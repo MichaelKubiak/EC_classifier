@@ -35,19 +35,21 @@ def level(data, targets, layers, pattern, seed):
 
 
 # -------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------------------------------
 
 def main():
 
     # ---------------------------------------------------------------------------------------------------
     # load files
     parser = path_arg("A script to produce a set of neural networks",
-                  "Path to the folder to be used for i/o")
-    parser.add_argument("-t", "--target_pattern", default=None, type=str, help="The series of values with which each EC "
-                                                                     "identified by this neural network should start")
+                      "Path to the folder to be used for i/o")
+    parser.add_argument("-t", "--target_pattern", default=None, type=str, help="The series of values with which each EC"
+                                                                               " identified by this neural network "
+                                                                               "should start")
     parser.add_argument("-s", "--random_seed", default=0, type=int, help="The random seed used by the random number "
                                                                          "generator - for reproducibility")
-    parser.add_argument("-i", "--hidden", default=5, type=int, help="The number of hidden layers that should be included "
-                                                                    "in the network")
+    parser.add_argument("-i", "--hidden", default=5, type=int, help="The number of hidden layers that should be included"
+                                                                    " in the network")
     args = parser.parse_args()
     DATA = args.path
 
